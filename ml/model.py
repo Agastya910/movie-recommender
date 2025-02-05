@@ -1,33 +1,33 @@
 import pandas as pd
 import pickle
-from sentence_transformers import SentenceTransformer
+from rank_bm25 import BM25Okapi
 from sklearn.metrics.pairwise import cosine_similarity
 
 class Recommender:
     def __init__(self):
-        self.model = SentenceTransformer('paraphrase-MiniLM-L6-v2')
         self.movies = pd.read_csv("data/movies.csv")
-        self.embeddings = self._load_embeddings()
+        self.tokenized_titles = [title.lower().split() for title in self.movies["title"].tolist()]
+        self.bm25 = self._load_bm25()
 
-    def _load_embeddings(self):
+    def _load_bm25(self):
         try:
-            with open("ml/embeddings.pkl", "rb") as f:
+            with open("ml/bm25.pkl", "rb") as f:
                 return pickle.load(f)
         except FileNotFoundError:
-            print("Embeddings not found. Generating embeddings...")
-            return self._generate_embeddings()
+            print("BM25 index not found. Generating BM25 index...")
+            return self._generate_bm25()
 
-    def _generate_embeddings(self):
-        embeddings = self.model.encode(self.movies['title'].tolist())
-        with open("ml/embeddings.pkl", "wb") as f:
-            pickle.dump(embeddings, f)
-        print("Embeddings generated and saved.")
-        return embeddings
+    def _generate_bm25(self):
+        bm25 = BM25Okapi(self.tokenized_titles)
+        with open("ml/bm25.pkl", "wb") as f:
+            pickle.dump(bm25, f)
+        print("BM25 index generated and saved.")
+        return bm25
 
     def get_recommendations(self, movie_title, top_n=4):
-        idx = self.movies[self.movies['title'] == movie_title].index[0]
-        sim_scores = cosine_similarity([self.embeddings[idx]], self.embeddings)[0]
-        similar_movies = sorted(enumerate(sim_scores), key=lambda x: x[1], reverse=True)[1:top_n+1]
+        query_tokens = movie_title.lower().split()
+        scores = self.bm25.get_scores(query_tokens)
+        similar_movies = sorted(enumerate(scores), key=lambda x: x[1], reverse=True)[1:top_n+1]
         return [self.movies.iloc[i[0]]['title'] for i in similar_movies]
 
 # Initialize once for the API
