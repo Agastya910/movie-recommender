@@ -4,3 +4,4 @@ kafka-python
 scikit-learn
 pandas
 numpy
+rank-bm25
