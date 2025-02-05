@@ -14,12 +14,14 @@ class Recommender:
             with open("ml/embeddings.pkl", "rb") as f:
                 return pickle.load(f)
         except FileNotFoundError:
+            print("Embeddings not found. Generating embeddings...")
             return self._generate_embeddings()
 
     def _generate_embeddings(self):
         embeddings = self.model.encode(self.movies['title'].tolist())
         with open("ml/embeddings.pkl", "wb") as f:
             pickle.dump(embeddings, f)
+        print("Embeddings generated and saved.")
         return embeddings
 
     def get_recommendations(self, movie_title, top_n=4):
