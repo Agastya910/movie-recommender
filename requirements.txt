@@ -1,7 +1,6 @@
 fastapi
 uvicorn
 kafka-python
-sentence-transformers
 scikit-learn
 pandas
 numpy
