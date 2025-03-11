@@ -151,8 +151,8 @@ User interactions are logged to the user-events Kafka topic. Example event:
   "timestamp": "2025-02-05T03:48:37.807Z"
 }
 ```
-Project Structure
-
+### Project Structure
+```
 movie-recommender/
 ├── api/
 │   ├── kafka_client.py       # Kafka producer for user events
@@ -168,7 +168,9 @@ movie-recommender/
 ├── Dockerfile                # Dockerfile for FastAPI service
 ├── requirements.txt          # Python dependencies
 └── README.md                 # Project documentation
-Technologies Used
+```
+
+### Technologies Used
 Python: Core programming language.
 
 FastAPI: Backend framework for serving recommendations.
