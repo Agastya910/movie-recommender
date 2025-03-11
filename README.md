@@ -55,7 +55,7 @@ cd movie-recommender
 
 ### Step 2: Install Dependencies
 ```bash
-Copy
+
 pip install -r requirements.txt
 ```
 
@@ -63,12 +63,12 @@ pip install -r requirements.txt
 Start Kafka and Zookeeper using Docker Compose:
 
 ```bash
-Copy
+
 docker-compose up --build
 Verify Kafka is running:
 ```
 ```bash
-Copy
+
 docker exec -it movie-recommender_kafka_1 kafka-topics --list --bootstrap-server localhost:9092
 ```
 
@@ -76,7 +76,7 @@ docker exec -it movie-recommender_kafka_1 kafka-topics --list --bootstrap-server
 Run the following script to generate embeddings for the movie dataset:
 
 ```bash
-Copy
+
 python ml/generate_embeddings.py
 ```
 
@@ -84,7 +84,7 @@ python ml/generate_embeddings.py
 Build and run the FastAPI service:
 
 ```bash
-Copy
+
 docker-compose up --build
 Access the API documentation at:
 Copy
@@ -95,7 +95,7 @@ http://localhost:8000/docs
 Push Docker Image to ECR:
 
 ```bash
-Copy
+
 aws ecr create-repository --repository-name movie-recommender
 docker tag movie-recommender_app:latest <aws_account_id>.dkr.ecr.<region>.amazonaws.com/movie-recommender:latest
 docker push <aws_account_id>.dkr.ecr.<region>.amazonaws.com/movie-recommender:latest
@@ -107,13 +107,13 @@ Launch an EC2 instance with Docker installed.
 Pull the Docker image:
 
 ```bash
-Copy
+
 docker pull <aws_account_id>.dkr.ecr.<region>.amazonaws.com/movie-recommender:latest
 ```
 Run the container:
 
 ```bash
-Copy
+
 docker run -p 8000:8000 <aws_account_id>.dkr.ecr.<region>.amazonaws.com/movie-recommender:latest
 
 ```
@@ -127,14 +127,14 @@ POST /recommend: Get movie recommendations.
 
 Example Request
 ```bash
-Copy
+
 curl -X POST "http://localhost:8000/recommend" \
 -H "Content-Type: application/json" \
 -d '{"movie_title": "The Matrix", "user_id": 1}'
 ```
 Example Response
 ```json
-Copy
+
 {
   "recommendations": ["Inception", "Interstellar", "The Dark Knight"]
 }
@@ -143,7 +143,7 @@ Kafka Events
 User interactions are logged to the user-events Kafka topic. Example event:
 
 ```json
-Copy
+
 {
   "user_id": 1,
   "movie_title": "The Matrix",
@@ -152,7 +152,7 @@ Copy
 }
 ```
 Project Structure
-Copy
+
 movie-recommender/
 ├── api/
 │   ├── kafka_client.py       # Kafka producer for user events
@@ -198,7 +198,4 @@ Agastya
 License
 This project is licensed under the MIT License. See LICENSE for details.
 
-Copy
-
----
 
