@@ -77,12 +77,11 @@ Verify Kafka is running:
 docker exec -it movie-recommender_kafka_1 kafka-topics --list --bootstrap-server localhost:9092
 ```
 
-### Step 4: Generate Embeddings
-Run the following script to generate embeddings for the movie dataset:
-
+### Step 4: Generate Synthetic User Profiles and Fine-Tune Mistral-7B
+Run the following scripts:
 ```bash
-
-python ml/generate_embeddings.py
+python3 data_preprocessing.py
+python3 llm_fine_tuning.py
 ```
 
 ### Step 5: Start the FastAPI Service
@@ -135,24 +134,22 @@ Example Request
 
 curl -X POST "http://localhost:8000/recommend" \
 -H "Content-Type: application/json" \
--d '{"movie_title": "The Matrix", "user_id": 1}'
+-d '{"query": "I like sci-fi movies"}'
 ```
 Example Response
 ```json
 
 {
-  "recommendations": ["Inception", "Interstellar", "The Dark Knight"]
+  "recommendation": "You might also like Blade Runner 2049, Ex Machina, and Arrival."
 }
 ```
 Kafka Events
-User interactions are logged to the user-events Kafka topic. Example event:
+User interactions are logged to the recommendation_requests Kafka topic. Example event:
 
 ```json
 
 {
-  "user_id": 1,
-  "movie_title": "The Matrix",
-  "action": "click",
+  "query": "I like sci-fi movies",
   "timestamp": "2025-02-05T03:48:37.807Z"
 }
 ```
@@ -164,11 +161,10 @@ movie-recommender/
 │   ├── kafka_consumer.py     # Kafka consumer for online learning
 │   └── main.py               # FastAPI backend
 ├── data/
-│   └── movies.csv            # Movie dataset
+│   └── imdb_top_1000.csv     # IMDb dataset
 ├── ml/
-│   ├── embeddings.pkl        # Precomputed embeddings
-│   ├── generate_embeddings.py # Script to generate embeddings
-│   └── model.py              # Recommendation model
+│   ├── synthetic_profiles_clustered.csv  # Synthetic user profiles
+│   └── mistral-movie-recommendation/     # Fine-tuned Mistral-7B model
 ├── docker-compose.yml        # Docker Compose configuration
 ├── Dockerfile                # Dockerfile for FastAPI service
 ├── requirements.txt          # Python dependencies
