@@ -186,7 +186,7 @@ Sentence Transformers: Semantic embeddings for movie titles.
 
 BM25: Ranking algorithm for recommendations.
 
-Future Enhancements
+### Future Enhancements
 Hybrid Recommendations: Combine content-based and collaborative filtering.
 
 Vector Database: Use FAISS or Pinecone for faster similarity searches.
@@ -195,10 +195,10 @@ Frontend Dashboard: Build a user-friendly interface for exploring recommendation
 
 Advanced Online Learning: Implement incremental model updates using libraries like River.
 
-Contributors
+### Contributors
 Agastya
 
-License
+### License
 This project is licensed under the MIT License. See LICENSE for details.
 
 
